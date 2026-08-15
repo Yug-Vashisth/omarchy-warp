@@ -116,20 +116,25 @@ test("parseRegistration probes alternate field spellings", () => {
 })
 
 test("parseTunnelStats accepts flat, wrapped, and metric-array shapes", () => {
-  const flat = Model.parseTunnelStats('{"endpoint":"162.159.193.10:2408","latency_ms":18.4,"bytes_sent":2048,"bytes_received":1048576}')
+  const flat = Model.parseTunnelStats('{"endpoint":"162.159.193.10:2408","protocol":"MASQUE","latency_ms":18.4,"bytes_sent":2048,"bytes_received":1048576,"last_handshake":"2026-08-15T12:34:56Z"}')
   assert.equal(flat.ok, true)
   assert.equal(flat.endpoint, "162.159.193.10:2408")
+  assert.equal(flat.protocol, "MASQUE")
   assert.equal(flat.latency, "18 ms")
   assert.equal(flat.sent, "2.0 KB")
   assert.equal(flat.received, "1.0 MB")
+  assert.equal(flat.handshake, "2026-08-15T12:34:56Z")
 
-  const wrapped = Model.parseTunnelStats('{"stats":{"tx_bytes":1024,"rx_bytes":512,"latency":42}}')
+  const wrapped = Model.parseTunnelStats('{"stats":{"tunnel_protocol":"WireGuard","tx_bytes":1024,"rx_bytes":512,"latency":42,"latest_handshake":"recently"}}')
+  assert.equal(wrapped.protocol, "WireGuard")
   assert.equal(wrapped.latency, "42 ms")
   assert.equal(wrapped.sent, "1.0 KB")
+  assert.equal(wrapped.handshake, "recently")
 
-  const metrics = Model.parseTunnelStats('[{"name":"endpoint","value":"edge"},{"name":"latency_ms","value":7}]')
+  const metrics = Model.parseTunnelStats('[{"name":"endpoint","value":"edge"},{"name":"latency_ms","value":7},{"name":"handshake","value":"now"}]')
   assert.equal(metrics.endpoint, "edge")
   assert.equal(metrics.latency, "7.0 ms")
+  assert.equal(metrics.handshake, "now")
 
   const failed = Model.parseTunnelStats('{"code":"WarpNotConnected","error":"WARP is not connected."}')
   assert.equal(failed.ok, false)
