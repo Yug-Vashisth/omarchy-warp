@@ -406,6 +406,8 @@ Panel {
             InfoPair { visible: warp.switchLocked; label: "Switch"; value: "Locked by policy" }
             InfoPair { visible: statsLatency !== ""; label: "Latency"; value: statsLatency }
             InfoPair { visible: statsEndpoint !== ""; label: "Endpoint"; value: statsEndpoint }
+            InfoPair { visible: statsProtocol !== ""; label: "Protocol"; value: statsProtocol }
+            InfoPair { visible: statsHandshake !== ""; label: "Last handshake"; value: statsHandshake }
             InfoPair { visible: statsTransfer !== ""; label: "Transfer"; value: statsTransfer }
           }
 
@@ -487,8 +489,14 @@ Panel {
     }
   }
 
+  /*
+   * Model.js owns compatibility with the different warp-cli response shapes.
+   * These properties only adapt its normalized values for optional UI rows.
+   */
   readonly property string statsLatency: warp.tunnelStats && warp.tunnelStats.latency ? String(warp.tunnelStats.latency) : ""
   readonly property string statsEndpoint: warp.tunnelStats && warp.tunnelStats.endpoint ? String(warp.tunnelStats.endpoint) : ""
+  readonly property string statsProtocol: warp.tunnelStats && warp.tunnelStats.protocol ? String(warp.tunnelStats.protocol) : ""
+  readonly property string statsHandshake: warp.tunnelStats && warp.tunnelStats.handshake ? String(warp.tunnelStats.handshake) : ""
   readonly property string statsTransfer: {
     var stats = warp.tunnelStats
     if (!stats || !stats.ok) return ""
