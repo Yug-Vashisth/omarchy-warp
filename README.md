@@ -12,6 +12,15 @@ That clones the plugin into `~/.config/omarchy/plugins/local.warp/` and places i
 
 The widget stays on the bar even when `warp-cli` is missing. Open it and choose **Install Cloudflare WARP** — that launches a floating terminal, installs `cloudflare-warp-bin` from the AUR, and enables `warp-svc`. After that the usual first-run path is start the daemon (if needed), register the device, then connect.
 
+## Remove
+
+```bash
+omarchy plugin remove local.warp
+```
+
+That drops the widget from the bar and deletes the checkout. It does not uninstall `cloudflare-warp-bin` or stop `warp-svc`.
+
+
 ## Features
 
 - Theme-colored cloud in the bar: dimmed when disconnected, `!` badge when setup is still needed
